@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,29 +26,29 @@ public class User {
     @Column(name = "username")
     @NotNull
     @NotBlank
-    @Max(50)
+    @Size(max = 50)
     private String username;
 
     @Column(name = "password")
     @NotNull
     @NotBlank
-    @Max(150)
+    @Size(max = 150)
     private String password;
 
     @Column(name = "first_name")
-    @Max(50)
+    @Size(max = 50)
     private String firstName;
 
     @Column(name = "last_name")
-    @Max(50)
+    @Size(max = 50)
     private String lastName;
 
     @Column(name = "email")
-    @Max(150)
+    @Size(max = 150)
     private String email;
 
     @Column(name = "phone_number")
-    @Max(12)
+    @Size(max = 12)
     private String phoneNumber;
 
     @Column(name = "created_at")
@@ -59,7 +60,7 @@ public class User {
     private ShoppingCart shoppingCart;
 
     @OneToMany(mappedBy = "user")
-    private List<OrderDetails> orderDetails;
+    private List<Order> orders;
 
 
 }

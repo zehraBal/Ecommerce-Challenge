@@ -7,28 +7,35 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
-public class OrderDetails {
+@Table(name = "order_item",schema = "public")
+public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "created_at")
-    @NotNull
-    private Timestamp createdAt;
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 
-    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @JoinColumn(name = "user_id")
-    private User user;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    @Column(name = "quantity")
+    private int quantity;
+
+    @Column(name = "price")
+    private double price;
 
     @Column(name = "total")
     private double total;
 
-    //one to one olabilir.
-    private PaymentDetails paymentDetails;
+    @Column(name = "created_at")
+    @NotNull
+    private Timestamp createdAt;
 }

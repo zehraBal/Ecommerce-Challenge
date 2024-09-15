@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "shoppingCart",schema = "public")
+@Table(name = "shopping_cart",schema = "public")
 public class ShoppingCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +31,7 @@ public class ShoppingCart {
     @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinTable(name="user_shopping_cart",schema = "public",joinColumns = @JoinColumn(name = "shopping_cart_id"),inverseJoinColumns = @JoinColumn(name = "product_id"))
     private List<Product> products;
+
+    @OneToOne(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
+    private Order order;
 }

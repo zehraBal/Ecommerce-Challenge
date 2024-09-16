@@ -29,7 +29,6 @@ public class Product {
     @Size(min = 3,max = 100)
     private String name;
 
-    //stok için de tablo oluşturmalı mıyım
     @Column(name = "stock_quantity")
     @Min(0)
     private int stockQuantity;

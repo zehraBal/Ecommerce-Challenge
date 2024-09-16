@@ -8,6 +8,8 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -53,6 +55,7 @@ public class User {
 
     @Column(name = "created_at")
     @NotNull
+    @CreationTimestamp
     private Timestamp createdAt;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -61,6 +64,11 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
+
+
+    @Column(name="modified_at")
+    @UpdateTimestamp
+    private Timestamp modifiedAt;
 
 
 }

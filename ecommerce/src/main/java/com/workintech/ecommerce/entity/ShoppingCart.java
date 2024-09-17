@@ -28,9 +28,12 @@ public class ShoppingCart {
     @JoinColumn(name = "user_id")
     private User User;
 
-    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @JoinTable(name="user_shopping_cart",schema = "public",joinColumns = @JoinColumn(name = "shopping_cart_id"),inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private List<Product> products;
+//    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+//    @JoinTable(name="user_shopping_cart",schema = "public",joinColumns = @JoinColumn(name = "shopping_cart_id"),inverseJoinColumns = @JoinColumn(name = "product_id"))
+//    private List<Product> products;
+
+    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
+    private List<CartItem> items;
 
     @OneToOne(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
     private Order order;

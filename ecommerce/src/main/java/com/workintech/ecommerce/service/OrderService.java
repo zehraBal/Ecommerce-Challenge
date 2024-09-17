@@ -1,18 +1,16 @@
 package com.workintech.ecommerce.service;
 
-import com.workintech.ecommerce.entity.Order;
-import com.workintech.ecommerce.entity.OrderItem;
-import com.workintech.ecommerce.entity.ShoppingCart;
-import com.workintech.ecommerce.entity.User;
+import com.workintech.ecommerce.entity.*;
 
 import java.util.List;
 
 public  interface OrderService {
-    Order createOrderFromItem(List<OrderItem> orderItems);
+    Order createOrderFromCart(long cartId, PaymentDetails paymentDetail);
     Order update(long id,Order order);
     Order delete(long id);
     Order save(Order order);
-    Order findAll();
+    List<Order> findAll();
     Order findByUser(User user);
     Order findById(long id);
+
 }

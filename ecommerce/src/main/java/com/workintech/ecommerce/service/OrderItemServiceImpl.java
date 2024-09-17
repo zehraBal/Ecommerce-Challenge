@@ -1,22 +1,27 @@
 package com.workintech.ecommerce.service;
 
+import com.workintech.ecommerce.entity.CartItem;
 import com.workintech.ecommerce.entity.Order;
 import com.workintech.ecommerce.entity.OrderItem;
 import com.workintech.ecommerce.entity.ShoppingCart;
 import com.workintech.ecommerce.exception.ApiException;
+import com.workintech.ecommerce.repository.CartItemRepository;
 import com.workintech.ecommerce.repository.OrderItemRepository;
 import com.workintech.ecommerce.repository.ShoppingCartRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class OrderItemServiceImpl implements OrderItemService{
+
     private OrderItemRepository oiRepository;
-    private ShoppingCartRepository scRepository;
+    private CartItemRepository cartItemRepository;
 
     @Override
     public List<OrderItem> findAll() {
@@ -39,30 +44,6 @@ public class OrderItemServiceImpl implements OrderItemService{
     }
 
     @Override
-    public List<OrderItem> createOrderItemsFromCart(ShoppingCart shoppingCart) {
-        Order newOrder = new Order();
-        newOrder.setUser(shoppingCart.getUser());
-      //  newOrder.setTotalPrice(calculateTotalPrice(shoppingCart));
-      //  newOrder.setOrderStatus("CREATED");
-
-        // Alışveriş sepetindeki ürünleri sipariş öğelerine dönüştür
-        List<OrderItem> orderItems = shoppingCart.getProducts().stream()
-                .map(product -> {
-                    OrderItem orderItem = new OrderItem();
-                    orderItem.setProduct(product);
-                    orderItem.setOrder(newOrder);  // Her OrderItem için Order ilişkisini kuruyoruz
-                    orderItem.setQuantity(1);  // Örnek olarak quantity=1
-                    orderItem.setPrice(product.getPrice());
-                    return orderItem;
-                })
-                .toList();
-
-        oiRepository.saveAll(orderItems);
-
-        return orderItems;
-    }
-
-    @Override
     public OrderItem delete(long id) {
         return null;
     }
@@ -75,5 +56,21 @@ public class OrderItemServiceImpl implements OrderItemService{
     @Override
     public OrderItem save(OrderItem orderItem) {
         return null;
+    }
+
+    @Override
+    public List<OrderItem> createOrderItemsFromCart(List<CartItem> cartItems, Order order) {
+        List<OrderItem> orderItems = cartItems.stream().map(cartItem -> {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setProduct(cartItem.getProduct());
+            orderItem.setQuantity(cartItem.getQuantity());
+            orderItem.setPrice(cartItem.getPrice());
+            orderItem.setTotal(cartItem.getPrice() * cartItem.getQuantity());
+            return orderItem;
+        }).collect(Collectors.toList());
+
+        return oiRepository.saveAll(orderItems);
+
     }
 }

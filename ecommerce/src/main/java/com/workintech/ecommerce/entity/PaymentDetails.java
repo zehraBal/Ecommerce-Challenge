@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
@@ -34,6 +35,7 @@ public class PaymentDetails {
 
     @Column(name = "created_at")
     @NotNull
+    @CreationTimestamp
     private Timestamp createdAt;
 
     @Column(name="modified_at")

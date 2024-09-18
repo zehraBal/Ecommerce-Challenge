@@ -1,10 +1,12 @@
 package com.workintech.ecommerce.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 @AllArgsConstructor
@@ -27,15 +29,21 @@ public class OrderItem {
     private Product product;
 
     @Column(name = "quantity")
+    @NotNull
+    @Min(1)
     private int quantity;
 
     @Column(name = "price")
+    @NotNull
+    @Min(0)
     private double price;
 
     @Column(name = "total")
+    @NotNull
     private double total;
 
     @Column(name = "created_at")
     @NotNull
+    @CreationTimestamp
     private Timestamp createdAt;
 }

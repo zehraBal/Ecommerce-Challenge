@@ -30,13 +30,12 @@ public class Product {
     private String name;
 
     @Column(name = "stock_quantity")
-    @Min(0)
+    @Min(1)
     private int stockQuantity;
 
     @Column(name = "price")
     @NotNull
-    @NotBlank
-    @Min(100)
+    @Min(0)
     private double price;
 
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})

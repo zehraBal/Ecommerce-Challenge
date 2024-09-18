@@ -7,10 +7,10 @@ import com.workintech.ecommerce.entity.User;
 import java.util.List;
 
 public interface ShoppingCartService {
-    ShoppingCart addProductToCart(long id, Product product);
-    ShoppingCart removeProductFromCart(long id,Product product);
+    ShoppingCart addProductToCart(long id,long productId,int quantity);
+    ShoppingCart removeProductFromCart(long id,long productId,int quantity);
     ShoppingCart findById(long id);
-    ShoppingCart findByUser(User user);
+   // ShoppingCart findByUser(User user);
     List<ShoppingCart> findAll();
     ShoppingCart createNewShoppingCart(User user);
     ShoppingCart delete(long id);

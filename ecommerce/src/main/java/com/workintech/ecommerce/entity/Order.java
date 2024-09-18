@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -22,6 +23,7 @@ public class Order {
 
     @Column(name = "created_at")
     @NotNull
+    @CreationTimestamp
     private Timestamp createdAt;
 
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
@@ -29,6 +31,7 @@ public class Order {
     private User user;
 
     @Column(name = "total")
+    @NotNull
     private double total;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -42,5 +45,5 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 
-    //adres eklenebilir.
+
 }

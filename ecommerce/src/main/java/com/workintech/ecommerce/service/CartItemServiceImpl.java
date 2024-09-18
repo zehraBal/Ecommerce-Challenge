@@ -53,7 +53,7 @@ public class CartItemServiceImpl implements CartItemService{
     }
 
     @Override
-    public List<CartItem> findByProductId(long productId) {
+    public CartItem findByProductId(long productId) {
         return cartItemRepository.findByProductId(productId);
     }
 
@@ -89,12 +89,14 @@ public class CartItemServiceImpl implements CartItemService{
         return cartItemRepository.save(cartItem);
     }
 
-    public void removeProductFromCart(ShoppingCart shoppingCart, Product product) {
+    public void removeProductFromCart(ShoppingCart shoppingCart, Product product,int quantity) {
         CartItem cartItem = cartItemRepository.findByShoppingCartAndProduct(shoppingCart, product);
-        if (cartItem != null) {
-            cartItemRepository.delete(cartItem);
+        if (cartItem != null ) {
+            if(cartItem.getQuantity()-quantity>0) {
+                cartItem.setQuantity(cartItem.getQuantity() - quantity);
+            }else{
+                cartItemRepository.delete(cartItem);
+            }
         }
     }
-
-
 }

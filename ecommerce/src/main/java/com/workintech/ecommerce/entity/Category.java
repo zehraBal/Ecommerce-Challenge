@@ -1,10 +1,13 @@
 package com.workintech.ecommerce.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -22,10 +25,14 @@ public class Category {
     private Long id;
 
     @Column(name = "name")
+    @NotNull
+    @NotBlank
+    @Size(max = 100)
     private String name;
 
     @Column(name = "created_at")
     @NotNull
+    @CreationTimestamp
     private Timestamp createdAt;
 
     @OneToMany(mappedBy = "category")

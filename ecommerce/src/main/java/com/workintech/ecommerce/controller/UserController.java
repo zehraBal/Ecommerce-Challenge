@@ -28,10 +28,10 @@ class UserController {
         return UserConverter.convertToUserResponse(userService.findById(id));
     }
 
-    @GetMapping("/username/{username}")
-    public UserResponse geyByUsername(@PathVariable String username){
-        return UserConverter.convertToUserResponse(userService.findByUsername(username));
-    }
+//    @GetMapping("/username/{username}")
+//    public UserResponse geyByUsername(@PathVariable String username){
+//        return UserConverter.convertToUserResponse(userService.findByUsername(username));
+//    }
 
     @GetMapping("/email/{email}")
     public UserResponse getByEmail(@PathVariable String email){

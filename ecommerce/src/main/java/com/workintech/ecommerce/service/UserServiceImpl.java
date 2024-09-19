@@ -1,24 +1,28 @@
 package com.workintech.ecommerce.service;
 
-import com.workintech.ecommerce.entity.ShoppingCart;
+import com.workintech.ecommerce.entity.Role;
 import com.workintech.ecommerce.entity.User;
 import com.workintech.ecommerce.exception.ApiException;
 import com.workintech.ecommerce.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService, UserDetailsService {
 
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
-
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<User> findAll() {
@@ -27,7 +31,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findById(long id) {
-        return userRepository.findById(id).orElseThrow(()->new ApiException("User not found",HttpStatus.NOT_FOUND));
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ApiException("User not found", HttpStatus.NOT_FOUND));
     }
 
     @Override
@@ -40,30 +45,46 @@ public class UserServiceImpl implements UserService{
         return userRepository.findByPhoneNumber(phoneNumber);
     }
 
-    @Override
-    public User findByUsername(String username){return userRepository.findByUsername(username);}
 
     @Override
     public User save(User user) {
         if (user == null) {
             throw new ApiException("User cannot be null", HttpStatus.BAD_REQUEST);
         }
-      return userRepository.save(user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        if (user.getAuthorities() == null || user.getAuthorities().isEmpty()) {
+            Role defaultRole = new Role();
+            defaultRole.setAuthority("USER"); // Default rol "USER"
+            user.setAuthorities(Collections.singleton(defaultRole));
+        }
+
+        return userRepository.save(user);
     }
 
     @Override
-    public User update(long id,User user) {
-      User userToUpdate = findById(id);
-      userToUpdate.setUsername(user.getUsername());
-      userToUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
-      userToUpdate.setFirstName(user.getFirstName());
-      userToUpdate.setLastName(user.getLastName());
-      userToUpdate.setEmail(user.getEmail());
-      userToUpdate.setPhoneNumber(user.getPhoneNumber());
-      userToUpdate.setShoppingCart(user.getShoppingCart());
-      userToUpdate.setOrders(user.getOrders());
-      userToUpdate.setCreatedAt(user.getCreatedAt());
-     return userRepository.save(userToUpdate);
+    public User update(long id, User user) {
+        User userToUpdate = findById(id);
+
+        if (user.getUsername() != null) userToUpdate.setUsername(user.getUsername());
+        if (user.getPassword() != null) userToUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getFirstName() != null) userToUpdate.setFirstName(user.getFirstName());
+        if (user.getLastName() != null) userToUpdate.setLastName(user.getLastName());
+        if (user.getEmail() != null) userToUpdate.setEmail(user.getEmail());
+        if (user.getPhoneNumber() != null) userToUpdate.setPhoneNumber(user.getPhoneNumber());
+        if (user.getShoppingCart() != null) userToUpdate.setShoppingCart(user.getShoppingCart());
+        if (user.getOrders() != null) userToUpdate.setOrders(user.getOrders());
+        if (user.getAuthorities() != null) {
+            Set<Role> roles = new HashSet<>();
+            user.getAuthorities().forEach(authority -> {
+                if (authority instanceof Role) {
+                    roles.add((Role) authority);
+                }
+            });
+            userToUpdate.setAuthorities(roles);
+        }
+
+        return userRepository.save(userToUpdate);
     }
 
     @Override
@@ -73,41 +94,12 @@ public class UserServiceImpl implements UserService{
         return userToDelete;
     }
 
-
-//    @Override
-//    public User updateEmail(long id, String email) {
-//        User userToUpdate = findById(id);
-//        userToUpdate.setEmail(email);
-//       return userRepository.save(userToUpdate);
-//    }
-
-//    @Override
-//    public User updateFirstName(long id, String firstName) {
-//        User userToUpdate = findById(id);
-//        userToUpdate.setFirstName(firstName);
-//      return  userRepository.save(userToUpdate);
-//    }
-//
-//    @Override
-//    public User updateLastName(long id, String lastName) {
-//        User userToUpdate = findById(id);
-//        userToUpdate.setLastName(lastName);
-//       return userRepository.save(userToUpdate);
-//    }
-//
-//    @Override
-//    public User updatePhoneNumber(long id, String phoneNumber) {
-//        User userToUpdate = findById(id);
-//        userToUpdate.setPhoneNumber(phoneNumber);
-//       return userRepository.save(userToUpdate);
-//    }
-//
-//    @Override
-//    public User updatePassword(long id, String password) {
-//        User userToUpdate = findById(id);
-//        userToUpdate.setPassword(passwordEncoder.encode(password));
-//        return userRepository.save(userToUpdate);
-//    }
-
-
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> {
+                    System.out.println("User credentials are not valid");
+                    throw new UsernameNotFoundException("User credentials are not valid");
+                });
+    }
 }

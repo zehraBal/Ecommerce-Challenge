@@ -10,7 +10,7 @@ public interface UserService {
     User findById(long id);
     User findByEmail(String email);
     User findByPhoneNumber(String phoneNumber);
-    User findByUsername(String username);
+//    User findByUsername(String username);
 //    User updateEmail(long id,String email);
 //    User updateFirstName(long id,String firstName);
 //    User updateLastName(long id,String lastName);

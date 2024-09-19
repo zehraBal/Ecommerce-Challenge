@@ -10,8 +10,8 @@ import java.util.List;
 public class CategoryConverter {
 
     public static CategoryResponse convertToCategoryResponse(Category category) {
-        List<ProductResponse> products=ProductConverter.convertToProductResponseList(category.getProducts());
-    return new CategoryResponse(category.getId(), category.getName(),products);
+       // List<ProductResponse> products=ProductConverter.convertToProductResponseList(category.getProducts());
+    return new CategoryResponse(category.getId(), category.getName());
     }
 
     public static List<CategoryResponse> convertToCategoryResponseList(List<Category> categories){

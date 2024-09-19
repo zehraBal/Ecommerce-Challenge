@@ -1,6 +1,7 @@
 package com.workintech.ecommerce.controller;
 
 import com.workintech.ecommerce.converter.CategoryConverter;
+import com.workintech.ecommerce.dto.CategoryRequest;
 import com.workintech.ecommerce.dto.CategoryResponse;
 import com.workintech.ecommerce.entity.Category;
 import com.workintech.ecommerce.service.CategoryService;
@@ -28,7 +29,9 @@ public class CategoryController {
     }
 
     @PostMapping
-    public CategoryResponse save(@RequestBody Category category){
+    public CategoryResponse save(@RequestBody CategoryRequest categoryRequest){
+        Category category=new Category();
+        category.setName(categoryRequest.name());
         return CategoryConverter.convertToCategoryResponse(categoryService.save(category));
     }
 

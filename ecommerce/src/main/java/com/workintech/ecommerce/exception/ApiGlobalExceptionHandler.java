@@ -1,5 +1,6 @@
 package com.workintech.ecommerce.exception;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -23,5 +24,25 @@ public class ApiGlobalExceptionHandler {
         ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(), Timestamp.valueOf(LocalDateTime.now()));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ExceptionResponse> handleIllegalArgument(IllegalArgumentException exception) {
+        ExceptionResponse response = new ExceptionResponse(
+                exception.getMessage(),
+                HttpStatus.BAD_REQUEST.value(),
+                Timestamp.valueOf(LocalDateTime.now())
+        );
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ExceptionResponse> handleDatabaseException(DataAccessException exception) {
+        ExceptionResponse response = new ExceptionResponse(
+                "Database error occurred: " + exception.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                Timestamp.valueOf(LocalDateTime.now())
+        );
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

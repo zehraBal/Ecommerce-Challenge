@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "category",schema = "public")
+@Table(name = "category",schema = "fsweb")
 public class Category {
 
     @Id
@@ -31,7 +31,6 @@ public class Category {
     private String name;
 
     @Column(name = "created_at")
-    @NotNull
     @CreationTimestamp
     private Timestamp createdAt;
 

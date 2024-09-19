@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "order",schema = "public")
+@Table(name = "order",schema = "fsweb")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,6 @@ public class Order {
     private Long id;
 
     @Column(name = "created_at")
-    @NotNull
     @CreationTimestamp
     private Timestamp createdAt;
 

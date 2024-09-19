@@ -6,20 +6,21 @@ import com.workintech.ecommerce.entity.ShoppingCart;
 import com.workintech.ecommerce.exception.ApiException;
 import com.workintech.ecommerce.repository.CartItemRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+@AllArgsConstructor
 @Service
 public class CartItemServiceImpl implements CartItemService{
+
     private CartItemRepository cartItemRepository;
     @Override
     public CartItem findById(long id) {
-        return cartItemRepository.findById(id).orElseThrow(()->new ApiException("Item not found", HttpStatus.NOT_FOUND));
+        return cartItemRepository.findById(id)
+                .orElseThrow(() -> new ApiException("Item not found", HttpStatus.NOT_FOUND));
     }
 
     @Override
@@ -36,7 +37,7 @@ public class CartItemServiceImpl implements CartItemService{
     @Override
     @Transactional
     public CartItem delete(long id) {
-        CartItem item=findById(id);
+        CartItem item = findById(id);
         cartItemRepository.delete(item);
         return item;
     }
@@ -44,7 +45,7 @@ public class CartItemServiceImpl implements CartItemService{
     @Override
     @Transactional
     public CartItem update(long id, CartItem cartItem) {
-        CartItem item=findById(id);
+        CartItem item = findById(id);
         item.setShoppingCart(cartItem.getShoppingCart());
         item.setProduct(cartItem.getProduct());
         item.setQuantity(cartItem.getQuantity());
@@ -54,25 +55,42 @@ public class CartItemServiceImpl implements CartItemService{
 
     @Override
     public CartItem findByProductId(long productId) {
-        return cartItemRepository.findByProductId(productId);
+        CartItem item=cartItemRepository.findByProductId(productId);
+        if(item==null){
+            throw new ApiException("Cart item with product ID not found", HttpStatus.NOT_FOUND);
+        }
+        return item;
     }
 
     @Override
     public List<CartItem> findByShoppingCart(long cartId) {
-        return cartItemRepository.findByShoppingCart(cartId);
+        List<CartItem> items = cartItemRepository.findByShoppingCart(cartId);
+        if (items.isEmpty()) {
+            throw new ApiException("No cart items found for the given shopping cart ID", HttpStatus.NOT_FOUND);
+        }
+        return items;
     }
 
     @Override
+    @Transactional
     public void clearCart(ShoppingCart shoppingCart) {
-    List<CartItem> items =cartItemRepository.findByShoppingCart(shoppingCart.getId());
-    cartItemRepository.deleteAll(items);
+        List<CartItem> items = cartItemRepository.findByShoppingCart(shoppingCart.getId());
+        if (items.isEmpty()) {
+            throw new ApiException("No items found in the cart to clear", HttpStatus.NOT_FOUND);
+        }
+        cartItemRepository.deleteAll(items);
     }
 
     @Override
     public List<CartItem> getItemsInCart(ShoppingCart shoppingCart) {
-        return cartItemRepository.findByShoppingCart(shoppingCart.getId());
+        List<CartItem> items = cartItemRepository.findByShoppingCart(shoppingCart.getId());
+        if (items.isEmpty()) {
+            throw new ApiException("No items found in the cart", HttpStatus.NOT_FOUND);
+        }
+        return items;
     }
 
+    @Transactional
     public CartItem addProductToCart(ShoppingCart shoppingCart, Product product, int quantity) {
         CartItem cartItem = cartItemRepository.findByShoppingCartAndProduct(shoppingCart, product);
 
@@ -89,14 +107,17 @@ public class CartItemServiceImpl implements CartItemService{
         return cartItemRepository.save(cartItem);
     }
 
-    public void removeProductFromCart(ShoppingCart shoppingCart, Product product,int quantity) {
+    @Transactional
+    public void removeProductFromCart(ShoppingCart shoppingCart, Product product, int quantity) {
         CartItem cartItem = cartItemRepository.findByShoppingCartAndProduct(shoppingCart, product);
-        if (cartItem != null ) {
-            if(cartItem.getQuantity()-quantity>0) {
+        if (cartItem != null) {
+            if (cartItem.getQuantity() - quantity > 0) {
                 cartItem.setQuantity(cartItem.getQuantity() - quantity);
-            }else{
+            } else {
                 cartItemRepository.delete(cartItem);
             }
+        } else {
+            throw new ApiException("Cart item with the given product not found", HttpStatus.NOT_FOUND);
         }
     }
 }

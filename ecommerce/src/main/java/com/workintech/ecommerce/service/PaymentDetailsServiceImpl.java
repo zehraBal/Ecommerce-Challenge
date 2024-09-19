@@ -20,7 +20,11 @@ public class PaymentDetailsServiceImpl implements PaymentDetailsService{
 
     @Override
     public List<PaymentDetails> findAll() {
-        return pdRepository.findAll();
+        List<PaymentDetails> details=pdRepository.findAll();
+        if (details.isEmpty()) {
+            throw new ApiException("No payment detail found", HttpStatus.NOT_FOUND);
+        }
+        return  details;
     }
 
     @Override
@@ -31,7 +35,11 @@ public class PaymentDetailsServiceImpl implements PaymentDetailsService{
     @Override
     public PaymentDetails findByOrderId(long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(()->new ApiException("Order not found.",HttpStatus.NOT_FOUND));
-        return order.getPaymentDetails();
+       PaymentDetails detail = pdRepository.findByOrderId(order.getId());
+       if(detail==null){
+           throw new ApiException("Payment detail not found for order ID " + orderId, HttpStatus.NOT_FOUND);
+       }
+       return detail;
     }
 
     @Override
@@ -43,6 +51,12 @@ public class PaymentDetailsServiceImpl implements PaymentDetailsService{
 
     @Override
     public PaymentDetails save(PaymentDetails paymentDetails) {
+        if (paymentDetails == null) {
+            throw new ApiException("Payment detail cannot be null", HttpStatus.BAD_REQUEST);
+        }
+        if(pdRepository.findByOrderId(paymentDetails.getOrder().getId())!=null){
+            throw new ApiException("Payment detail already exists", HttpStatus.CONFLICT);
+        }
         return pdRepository.save(paymentDetails);
     }
 

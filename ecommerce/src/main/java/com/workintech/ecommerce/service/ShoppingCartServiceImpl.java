@@ -24,18 +24,34 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
     @Override
     @Transactional
     public ShoppingCart addProductToCart(long id, long productId,int quantity) {
+        if(quantity<=0){
+            throw new ApiException("Quantity cannot be less than 0. ", HttpStatus.BAD_REQUEST);
+        }
         ShoppingCart cart=findById(id);
         Product product=productService.findById(productId);
+        if (product==null){
+            throw new ApiException("Product cannot be null", HttpStatus.BAD_REQUEST);
+        }
+        productService.decreaseQuantity(productId, quantity);
         cartItemService.addProductToCart(cart,product,quantity);
+        cart.calculateTotalPrice();
         return cart;
     }
 
     @Override
     @Transactional
     public ShoppingCart removeProductFromCart(long id, long productId,int quantity) {
+        if(quantity<=0){
+            throw new ApiException("Quantity cannot be less than 0. ", HttpStatus.BAD_REQUEST);
+        }
         ShoppingCart cart=findById(id);
         Product product=productService.findById(productId);
+        if (product==null){
+            throw new ApiException("Product cannot be null", HttpStatus.BAD_REQUEST);
+        }
+        productService.increaseQuantity(productId, quantity);
         cartItemService.removeProductFromCart(cart,product,quantity);
+        cart.calculateTotalPrice();
         return cart;
     }
 
@@ -51,11 +67,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
 
     @Override
     public List<ShoppingCart> findAll() {
-        return sCRepository.findAll();
+        List<ShoppingCart> carts=sCRepository.findAll();
+        if (carts.isEmpty()) {
+            throw new ApiException("No carts found", HttpStatus.NOT_FOUND);
+        }
+        return carts;
     }
 
     @Override
     public ShoppingCart createNewShoppingCart(User user) {
+        if(user==null){
+                throw new ApiException("User cannot be null", HttpStatus.BAD_REQUEST);
+        }
         ShoppingCart cart=new ShoppingCart();
         cart.setUser(user);
         return sCRepository.save(cart);
@@ -72,6 +95,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
     @Override
     @Transactional
     public ShoppingCart save(ShoppingCart shoppingCart) {
+        if (shoppingCart == null) {
+            throw new ApiException("Cart cannot be null", HttpStatus.BAD_REQUEST);
+        }
+        if(sCRepository.findById(shoppingCart.getId()).isPresent()){
+            throw new ApiException("Cart already exists", HttpStatus.CONFLICT);
+        }
         return sCRepository.save(shoppingCart);
     }
 

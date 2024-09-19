@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "cart_item",schema = "public")
+@Table(name = "cart_item",schema = "fsweb")
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,4 +37,8 @@ public class CartItem {
     @NotNull
     @Min(0)
     private double price;
+
+    public double getTotalPrice(){
+        return this.price*this.quantity;
+    }
 }

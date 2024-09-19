@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "product")
+@Table(name = "product",schema = "fsweb")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,10 +44,10 @@ public class Product {
     private Category category;
 
     @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @JoinTable(name = "user_shopping_cart",schema = "public",joinColumns = @JoinColumn(name = "product_id"),inverseJoinColumns = @JoinColumn(name = "shopping_cart_id"))
+    @JoinTable(name = "user_shopping_cart",schema = "fsweb",joinColumns = @JoinColumn(name = "product_id"),inverseJoinColumns = @JoinColumn(name = "shopping_cart_id"))
     private List<ShoppingCart> shoppingCarts;
 
     @Column(name = "created_at")
-    @NotNull
+    @CreationTimestamp
     private Timestamp createdAt;
 }

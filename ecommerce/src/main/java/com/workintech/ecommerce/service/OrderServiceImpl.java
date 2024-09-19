@@ -23,12 +23,21 @@ public class OrderServiceImpl implements OrderService{
     @Transactional
     public Order createOrderFromCart(long cartId, PaymentDetails paymentDetail) {
         ShoppingCart cart=shoppingCartService.findById(cartId);
+        if (cart == null || cart.getItems().isEmpty()) {
+            throw new ApiException("Shopping cart is empty or does not exist", HttpStatus.BAD_REQUEST);
+        }
+        if (paymentDetail == null) {
+            throw new ApiException("Payment details cannot be null", HttpStatus.BAD_REQUEST);
+        }
         List<CartItem> cartItems=cart.getItems();
         Order newOrder=new Order();
         newOrder.setUser(cart.getUser());
         newOrder.setPaymentDetails(paymentDetail);
         double total = cartItems.stream().mapToDouble(item -> item.getPrice() * item.getQuantity()).sum();
         newOrder.setTotal(total);
+        if (total <= 0) {
+            throw new ApiException("Total order amount cannot be zero or negative", HttpStatus.BAD_REQUEST);
+        }
         newOrder = orderRepository.save(newOrder);
         orderItemService.createOrderItemsFromCart(cartItems,newOrder);
         shoppingCartService.clearCart(cartId);
@@ -39,6 +48,9 @@ public class OrderServiceImpl implements OrderService{
     @Transactional
     public Order update(long id, Order order) {
         Order orderToUpdate =findById(id);
+        if (order == null) {
+            throw new ApiException("Order to update cannot be null", HttpStatus.BAD_REQUEST);
+        }
         orderToUpdate.setUser(order.getUser());
         orderToUpdate.setTotal(order.getTotal());
         orderToUpdate.setPaymentDetails(order.getPaymentDetails());
@@ -51,6 +63,9 @@ public class OrderServiceImpl implements OrderService{
     @Transactional
     public Order delete(long id) {
         Order order=findById(id);
+        if (order == null) {
+            throw new ApiException("Order to update cannot be null", HttpStatus.BAD_REQUEST);
+        }
         orderRepository.delete(order);
         return order;
     }
@@ -58,18 +73,32 @@ public class OrderServiceImpl implements OrderService{
     @Override
     @Transactional
     public Order save(Order order) {
+        if (order == null) {
+            throw new ApiException("Order to update cannot be null", HttpStatus.BAD_REQUEST);
+        }
         return orderRepository.save(order);
     }
 
     @Override
     public List<Order> findAll() {
-        return orderRepository.findAll();
-    }
+        List<Order> orders = orderRepository.findAll();
+        if (orders.isEmpty()) {
+            throw new ApiException("No orders found", HttpStatus.NOT_FOUND);
+        }
+        return orders;    }
 
     @Override
     public Order findByUser(User user) {
-        return orderRepository.findByUser(user);
-    }
+        if (user == null) {
+            throw new ApiException("User cannot be null", HttpStatus.BAD_REQUEST);
+        }
+
+        Order order = orderRepository.findByUser(user);
+        if (order == null) {
+            throw new ApiException("No order found for user", HttpStatus.NOT_FOUND);
+        }
+
+        return order;    }
 
     @Override
     public Order findById(long id) {

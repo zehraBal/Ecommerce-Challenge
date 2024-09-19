@@ -20,7 +20,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "user",schema = "public")
+@Table(name = "user",schema = "fsweb")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +36,7 @@ public class User implements UserDetails {
     @Column(name = "password")
     @NotNull
     @NotBlank
-    @Size(max = 150)
+    @Size(min=8,max = 150)
     private String password;
 
     @Column(name = "first_name")
@@ -75,7 +75,7 @@ public class User implements UserDetails {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "user_roles",
+            name = "user_roles",schema = "fsweb",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )

@@ -1,8 +1,11 @@
 package com.workintech.ecommerce.controller;
 
 import com.workintech.ecommerce.converter.ProductConverter;
+import com.workintech.ecommerce.dto.ProductRequest;
 import com.workintech.ecommerce.dto.ProductResponse;
+import com.workintech.ecommerce.entity.Category;
 import com.workintech.ecommerce.entity.Product;
+import com.workintech.ecommerce.service.CategoryService;
 import com.workintech.ecommerce.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -17,7 +20,8 @@ import java.util.List;
 public class ProductController {
 
 
-    ProductService productService;
+    private ProductService productService;
+    private CategoryService categoryService;
 
     @GetMapping
     public List<ProductResponse> getAll(){
@@ -35,7 +39,13 @@ public class ProductController {
     }
 
     @PostMapping
-    public ProductResponse save(@RequestBody Product product){
+    public ProductResponse save(@RequestBody ProductRequest productRequest){
+        Product product=new Product();
+        Category category=categoryService.findById(productRequest.category_id());
+        product.setName(productRequest.name());
+        product.setPrice(productRequest.price());
+        product.setStockQuantity(productRequest.stockQuantity());
+        product.setCategory(category);
         return ProductConverter.convertToProductResponse(productService.save(product));
     }
 

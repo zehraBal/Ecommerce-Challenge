@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "payment_details",schema = "public")
+@Table(name = "payment_details",schema = "fsweb")
 public class PaymentDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,12 +29,11 @@ public class PaymentDetails {
     @NotNull
     private PaymentType paymentType;
 
-    @OneToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},mappedBy = "paymentDetails")
+    @OneToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn(name = "order_id")
     private Order order;
 
     @Column(name = "created_at")
-    @NotNull
     @CreationTimestamp
     private Timestamp createdAt;
 

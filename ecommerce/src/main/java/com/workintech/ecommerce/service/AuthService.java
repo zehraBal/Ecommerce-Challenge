@@ -11,8 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+
 
 @Service
 public class AuthService {
@@ -30,15 +29,12 @@ public class AuthService {
 
 
     public User register(String username, String password) {
-        // Kullanıcı adını kontrol et
         if (userRepository.findByUsername(username).isPresent()) {
             throw new IllegalArgumentException("Username already exists");
         }
 
-        // Şifreyi şifrele
         String encodedPassword = passwordEncoder.encode(password);
 
-        // Rol oluştur
         Role role = roleRepository.findByAuthority("USER").orElseThrow(()->new ApiException("Role does not exist",HttpStatus.NOT_FOUND));
         if (role == null) {
             role = new Role();
@@ -46,7 +42,6 @@ public class AuthService {
             roleRepository.save(role);
         }
 
-        // Yeni kullanıcı oluştur ve kaydet
         User user = new User();
         user.setUsername(username);
         user.setPassword(encodedPassword);

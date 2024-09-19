@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "order_item",schema = "public")
+@Table(name = "order_item",schema = "fsweb")
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +43,6 @@ public class OrderItem {
     private double total;
 
     @Column(name = "created_at")
-    @NotNull
     @CreationTimestamp
     private Timestamp createdAt;
 }

@@ -26,7 +26,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public List<User> findAll() {
-        return userRepository.findAll();
+        List<User> users=userRepository.findAll();
+        if (users.isEmpty()) {
+            throw new ApiException("No users found", HttpStatus.NOT_FOUND);
+        }
+        return users;
     }
 
     @Override
@@ -37,20 +41,33 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        User user=userRepository.findByEmail(email);
+        if(user==null){
+           throw  new ApiException("User not found", HttpStatus.NOT_FOUND);
+        }
+        return user;
     }
 
     @Override
     public User findByPhoneNumber(String phoneNumber) {
-        return userRepository.findByPhoneNumber(phoneNumber);
+        User user=userRepository.findByPhoneNumber(phoneNumber);
+        if(user==null){
+            throw  new ApiException("User not found", HttpStatus.NOT_FOUND);
+        }
+        return user;
     }
-
 
     @Override
     public User save(User user) {
         if (user == null) {
             throw new ApiException("User cannot be null", HttpStatus.BAD_REQUEST);
         }
+        if(userRepository.findByUsername(user.getUsername()).isPresent()){
+            throw new ApiException("Username already exists", HttpStatus.CONFLICT);
+        }
+//        if (user.getPassword().length() < 8) {
+//            throw new IllegalArgumentException("Password must be at least 8 characters long");
+//        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         if (user.getAuthorities() == null || user.getAuthorities().isEmpty()) {

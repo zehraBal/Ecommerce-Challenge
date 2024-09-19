@@ -4,6 +4,7 @@ public enum PaymentType {
     CASH,
     CREDIT_CARD,
     BANK_TRANSFER,
-    DIGITAL_WALLET
+    DIGITAL_WALLET,
+    PAYPAL
 
 }

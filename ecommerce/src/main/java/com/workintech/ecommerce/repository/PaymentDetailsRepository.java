@@ -1,5 +1,6 @@
 package com.workintech.ecommerce.repository;
 
+import com.workintech.ecommerce.entity.Order;
 import com.workintech.ecommerce.entity.PaymentDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -8,4 +9,7 @@ public interface PaymentDetailsRepository extends JpaRepository<PaymentDetails,L
 
     @Query("SELECT pd FROM PaymentDetails pd WHERE pd.order.id = :orderId")
     PaymentDetails findByOrderId(long orderId);
+
+    @Query("SELECT pd FROM PaymentDetails pd WHERE pd.order = :order")
+    PaymentDetails findByOrder(Order order);
 }

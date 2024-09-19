@@ -37,8 +37,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/welcome/**").permitAll();
                     auth.requestMatchers("/auth/**").permitAll();
-                    auth.requestMatchers("/product/**").hasAnyAuthority("ADMIN");
-                    auth.requestMatchers("/category/**").hasAnyAuthority("ADMIN");
+                    auth.requestMatchers("/cart/**").permitAll();
+                    auth.requestMatchers("/product/**").permitAll();
+                    auth.requestMatchers("/category/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .formLogin(Customizer.withDefaults())

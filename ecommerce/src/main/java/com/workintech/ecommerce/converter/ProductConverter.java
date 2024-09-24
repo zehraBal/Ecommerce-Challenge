@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 
 public class ProductConverter {
     public static ProductResponse convertToProductResponse(Product product) {
+        if (product == null) {
+            throw new IllegalArgumentException("Product cannot be null");
+        }
         return new ProductResponse(
                 product.getId(),
                 product.getName(),

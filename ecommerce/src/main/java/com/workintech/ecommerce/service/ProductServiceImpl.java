@@ -52,7 +52,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public Product delete(long id) {
-        Product product=findById(id);
+        Product product=productRepository.findById(id).orElseThrow(()->new ApiException("Product not found", HttpStatus.NOT_FOUND));
         productRepository.deleteById(id);
         return product;
     }

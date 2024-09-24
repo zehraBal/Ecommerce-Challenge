@@ -113,6 +113,7 @@ public class CartItemServiceImpl implements CartItemService{
         if (cartItem != null) {
             if (cartItem.getQuantity() - quantity > 0) {
                 cartItem.setQuantity(cartItem.getQuantity() - quantity);
+                cartItemRepository.save(cartItem);  // Burada save çağrıldığından emin olalım
             } else {
                 cartItemRepository.delete(cartItem);
             }
@@ -120,4 +121,6 @@ public class CartItemServiceImpl implements CartItemService{
             throw new ApiException("Cart item with the given product not found", HttpStatus.NOT_FOUND);
         }
     }
+
+
 }

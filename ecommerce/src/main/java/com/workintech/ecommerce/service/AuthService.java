@@ -27,7 +27,6 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
     public User register(String username, String password) {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new IllegalArgumentException("Username already exists");
@@ -35,12 +34,7 @@ public class AuthService {
 
         String encodedPassword = passwordEncoder.encode(password);
 
-        Role role = roleRepository.findByAuthority("USER").orElseThrow(()->new ApiException("Role does not exist",HttpStatus.NOT_FOUND));
-        if (role == null) {
-            role = new Role();
-            role.setAuthority("USER");
-            roleRepository.save(role);
-        }
+        Role role = roleRepository.findByAuthority("USER").orElseThrow(() -> new ApiException("Role does not exist", HttpStatus.NOT_FOUND));
 
         User user = new User();
         user.setUsername(username);
@@ -49,4 +43,6 @@ public class AuthService {
 
         return userRepository.save(user);
     }
+
+
 }

@@ -9,8 +9,7 @@ import java.util.List;
 
 public class PaymentDetailConverter {
     public static PaymentDetailResponse convertToPaymentDetailResponse(PaymentDetails detail){
-        OrderResponse orderResponse=OrderConverter.convertToOrderResponse(detail.getOrder());
-        return new PaymentDetailResponse(detail.getId(),detail.getUser().getUsername(),detail.getPaymentType().toString(),orderResponse,detail.getCreatedAt());
+        return new PaymentDetailResponse(detail.getId(),detail.getUser().getUsername(),detail.getPaymentType().toString(),detail.getOrder().getId(),detail.getCreatedAt());
     }
 
     public static List<PaymentDetailResponse> convertToPaymentDetailResponseList(List<PaymentDetails> details){

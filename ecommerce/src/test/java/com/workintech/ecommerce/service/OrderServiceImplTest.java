@@ -65,7 +65,6 @@ class OrderServiceImplTest {
     void createOrderFromCart_WhenValid_ShouldCreateOrder() {
         long cartId = 1L;
 
-        // Sepet ve ürünleri ayarlıyoruz
         ShoppingCart cart = new ShoppingCart();
         cart.setUser(new User());
 
@@ -73,7 +72,7 @@ class OrderServiceImplTest {
         cartItem.setPrice(100.0);
         cartItem.setQuantity(2);
 
-        cart.setItems(List.of(cartItem));  // items dolu olmalı, yoksa total 0 olur
+        cart.setItems(List.of(cartItem));
 
         PaymentDetails paymentDetails = new PaymentDetails();
         Order savedOrder = new Order();

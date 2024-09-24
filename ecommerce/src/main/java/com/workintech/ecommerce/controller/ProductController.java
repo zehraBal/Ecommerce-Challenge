@@ -61,7 +61,7 @@ public class ProductController {
 
     @PutMapping("/{id}/increaseQuantity")
     public ProductResponse increaseQuantity(@PathVariable long id,@RequestParam int incNum){
-        return ProductConverter.convertToProductResponse(productService.decreaseQuantity(id,incNum));
+        return ProductConverter.convertToProductResponse(productService.increaseQuantity(id,incNum));
     }
 
     @DeleteMapping("/{id}")

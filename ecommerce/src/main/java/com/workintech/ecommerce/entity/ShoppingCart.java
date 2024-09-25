@@ -1,5 +1,6 @@
 package com.workintech.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -30,6 +32,7 @@ public class ShoppingCart {
 
     @OneToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},mappedBy = "shoppingCart")
     @JoinColumn(name = "user_id")
+    @JsonManagedReference
     private User User;
 
 //    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
@@ -37,7 +40,7 @@ public class ShoppingCart {
 //    private List<Product> products;
 
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
-    private List<CartItem> items;
+    private List<CartItem> items=new ArrayList<>();
 
     @OneToOne(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
     private Order order;

@@ -1,5 +1,6 @@
 package com.workintech.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -11,10 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -62,10 +60,11 @@ public class User implements UserDetails {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "shopping_cart_id")
+    @JsonBackReference
     private ShoppingCart shoppingCart;
 
     @OneToMany(mappedBy = "user")
-    private List<Order> orders;
+    private List<Order> orders=new ArrayList<>();
 
 
     @Column(name="modified_at")

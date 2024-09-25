@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -35,6 +36,6 @@ public class Category {
     private Timestamp createdAt;
 
     @OneToMany(mappedBy = "category")
-    private List<Product> products;
+    private List<Product> products=new ArrayList<>();
 
 }

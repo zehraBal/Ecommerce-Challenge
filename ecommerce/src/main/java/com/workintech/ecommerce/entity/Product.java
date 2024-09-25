@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -45,7 +46,7 @@ public class Product {
 
     @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinTable(name = "user_shopping_cart",schema = "fsweb",joinColumns = @JoinColumn(name = "product_id"),inverseJoinColumns = @JoinColumn(name = "shopping_cart_id"))
-    private List<ShoppingCart> shoppingCarts;
+    private List<ShoppingCart> shoppingCarts=new ArrayList<>();
 
     @Column(name = "created_at")
     @CreationTimestamp

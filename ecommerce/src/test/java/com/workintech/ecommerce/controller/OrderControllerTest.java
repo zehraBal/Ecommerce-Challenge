@@ -1,6 +1,7 @@
 package com.workintech.ecommerce.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.workintech.ecommerce.config.TestSecurityConfig;
 import com.workintech.ecommerce.dto.OrderRequest;
 import com.workintech.ecommerce.dto.OrderResponse;
 import com.workintech.ecommerce.entity.Order;
@@ -16,6 +17,7 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(OrderController.class)
+@Import(TestSecurityConfig.class)
 class OrderControllerTest {
 
     @Autowired
@@ -58,6 +61,7 @@ class OrderControllerTest {
         paymentDetails = new PaymentDetails();
         paymentDetails.setId(1L);
         paymentDetails.setPaymentType(PaymentType.CASH);
+        order.setPaymentDetails(paymentDetails);
     }
 
     @Test

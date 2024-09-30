@@ -1,7 +1,7 @@
 package com.workintech.ecommerce.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.workintech.ecommerce.config.TestSecurityConfig;
+//import com.workintech.ecommerce.config.TestSecurityConfig;
 import com.workintech.ecommerce.dto.CartItemResponse;
 import com.workintech.ecommerce.dto.ShoppingCartResponse;
 import com.workintech.ecommerce.entity.CartItem;
@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CartController.class)
-@Import(TestSecurityConfig.class)  // Security Configuration
+//@Import(TestSecurityConfig.class)  // Security Configuration
 class CartControllerTest {
 
     @Autowired

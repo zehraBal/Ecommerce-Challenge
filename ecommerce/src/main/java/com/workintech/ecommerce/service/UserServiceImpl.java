@@ -40,6 +40,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new ApiException("User not found", HttpStatus.NOT_FOUND));
+    }
+
+    @Override
     public User findByEmail(String email) {
         User user=userRepository.findByEmail(email);
         if(user==null){
@@ -79,6 +84,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.save(user);
     }
 
+    @Override
+    public Boolean validateUser(String username, String password) {
+        User user = findByUsername(username);
+        if (user == null) {
+            return false; //
+        }
+        return passwordEncoder.matches(password, user.getPassword()); //
+    }
     @Override
     public User update(long id, User user) {
         User userToUpdate = findById(id);
